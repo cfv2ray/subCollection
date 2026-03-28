@@ -19,7 +19,7 @@ jobs: # 创建环境
       - name: Checkout upstream repository
         uses: actions/checkout@v4
         with:
-          repository: jinwei26/testAction   # 目标仓库
+          repository: free-nodes/v2rayfree   # 目标仓库
           path: upstream                    # 检出的目录名
           fetch-depth: 0                    # 获取完整历史，以便后续比较
 
