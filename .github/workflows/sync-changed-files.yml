@@ -7,8 +7,8 @@ on:
   # 也可以定时同步（每6小时）
   # 分钟 小时 天 月  周
   # https://crontab.guru/
-  schedule:
-    #- cron: '0 0 * * *'
+  #schedule:
+  #  - cron: '0 0 * * *'
 
 jobs: # 创建环境
   sync-changed-files:
