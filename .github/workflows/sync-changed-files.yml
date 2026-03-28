@@ -24,7 +24,7 @@ jobs: # 创建环境
           fetch-depth: 0                    # 获取完整历史，以便后续比较
 
       # 步骤2：获取最新一次提交的新增文件（对比 HEAD~1 和 HEAD）
-      - name: Get current commit SHA
+      - name:  获取最新一次提交的新增文件（对比 HEAD~1 和 HEAD）
         id: current
         run: |
           cd upstream
