@@ -5,6 +5,8 @@ on:
   workflow_dispatch:
 
   # 也可以定时同步（每6小时）
+  # 分钟 小时 天 月  周
+  # https://crontab.guru/
   schedule:
     - cron: '0 0 * * *'
 
@@ -26,7 +28,7 @@ jobs: # 创建环境
       - name: 检出上游仓库
         uses: actions/checkout@v4
         with:
-          repository: free-nodes/v2rayfree   # 上游目标仓库
+          repository: jinwei26/testAction   # 上游目标仓库
           path: upstream                    # 检出的目录名
           fetch-depth: 0                    # 获取完整历史，以便后续比较
       
@@ -39,7 +41,7 @@ jobs: # 创建环境
           cat newadd.txt
           cp newadd.txt ../own_repo/newadd.txt
 
-      # 
+      # 提交并推送到自己的仓库
       - name: 提交并推送到自己的仓库
         run: |
           cd own_repo
