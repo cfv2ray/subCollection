@@ -23,12 +23,28 @@ jobs: # 创建环境
           path: own_repo
 
       # 检出上游仓库（默认会检出默认分支的最新提交）
-      - name: checkout upstream repository
+      - name: 检出上游仓库
         uses: actions/checkout@v4
         with:
           repository: free-nodes/v2rayfree   # 上游目标仓库
           path: upstream                    # 检出的目录名
           fetch-depth: 0                    # 获取完整历史，以便后续比较
-     
+      
+      # 获取最新一次提交的新增文件（对比 HEAD~1 和 HEAD）
+      # # 将newadd.txt保存到 own_repo
+      - name: 获取最新一次提交的新增文件
+        run: |
+          cd upstream
+          git diff --name-only --diff-filter=A HEAD~1 HEAD > newadd.txt
+          cat newadd.txt
+          cp newadd.txt ../own_repo/newadd.txt
 
-  
+      # 
+      - name: 提交并推送到自己的仓库
+        run: |
+          cd own_repo
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add .
+          git commit -m "https://github.com/free-nodes/v2rayfree $(date)" || echo "No changes to commit"
+          git push
