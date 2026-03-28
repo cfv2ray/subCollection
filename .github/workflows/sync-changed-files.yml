@@ -28,4 +28,5 @@ jobs: # 创建环境
         id: current
         run: |
           cd upstream
-          git diff --name-only --diff-filter=A HEAD~1 HEAD
+          git diff --name-only --diff-filter=A HEAD~1 HEAD >newadd
+          cat newadd
