@@ -22,22 +22,7 @@ jobs: # 创建环境
           token: ${{ secrets.HEXO_AUTO_DEPLOY }}
           path: own_repo
 		  
-      # 步骤1：检出上游仓库（默认会检出默认分支的最新提交）
-      - name: Checkout upstream repository
-        uses: actions/checkout@v4
-        with:
-          repository: free-nodes/v2rayfree   # 目标仓库
-          path: upstream                    # 检出的目录名
-          fetch-depth: 0                    # 获取完整历史，以便后续比较
-
-      # 步骤2：获取最新一次提交的新增文件（对比 HEAD~1 和 HEAD）
-      - name:  获取最新一次提交的新增文件（对比 HEAD~1 和 HEAD）
-        id: current
-        run: |
-          cd upstream
-          git diff --name-only --diff-filter=A HEAD~1 HEAD > newadd.txt
-          cat newadd.txt
-          cp newadd.txt ../own_repo/newadd.txt #  将列表保存到 own_repo 中，作为 newadd.txt
+     
 
       - name: 提交并推送到自己的仓库
         run: |
