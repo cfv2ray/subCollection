@@ -43,7 +43,7 @@ jobs: # 创建环境
           git diff --name-only --diff-filter=MR HEAD~1 HEAD > newadd.txt
           cat newadd.txt
           cp newadd.txt ../own_repo/newadd.txt
-          aaa=$(grep -F "https://raw.githubusercontent.com/free-nodes/v2rayfree/main/" READ.MD | sed 's#.*https://raw.githubusercontent.com/free-nodes/v2rayfree/main/##' | grep -o '^[^;]*' | sed 's/[[:space:]]*$//')
+          aaa=$(grep -F "https://raw.githubusercontent.com/free-nodes/v2rayfree/main/" README.md | sed 's#.*https://raw.githubusercontent.com/free-nodes/v2rayfree/main/##' | grep -o '^[^;]*' | sed 's/[[:space:]]*$//')
           echo "aaa=$aaa"
 
       # 提交并推送到自己的仓库
