@@ -28,7 +28,7 @@ jobs: # 创建环境
       - name: 检出上游仓库
         uses: actions/checkout@v4
         with:
-          repository: jinwei26/testAction   # 上游目标仓库
+          repository: free-nodes/v2rayfree   # 上游目标仓库
           path: upstream                    # 检出的目录名
           fetch-depth: 0                    # 获取完整历史，以便后续比较
       
