@@ -44,7 +44,7 @@ jobs: # 创建环境
           cat newadd.txt
           cp newadd.txt ../own_repo/newadd.txt
           aaa="https://raw.githubusercontent.com/free-nodes/v2rayfree/main/"
-          awk -v url="$aaa" 'index($0, url) {sub(/.*main//, ""); print}' README.md
+          
 
       # 提交并推送到自己的仓库
       - name: 提交并推送到自己的仓库
