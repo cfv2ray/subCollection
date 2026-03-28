@@ -8,7 +8,7 @@ on:
   # 分钟 小时 天 月  周
   # https://crontab.guru/
   schedule:
-    - cron: '0 0 * * *'
+    #- cron: '0 0 * * *'
 
 jobs: # 创建环境
   sync-changed-files:
@@ -33,11 +33,14 @@ jobs: # 创建环境
           fetch-depth: 0                    # 获取完整历史，以便后续比较
       
       # 获取最新一次提交的新增文件（对比 HEAD~1 和 HEAD）
+      # --name-only：仅输出文件名；
+      # --diff-filter=M；筛选状态为 M（修改）的文件、A （新增）、D（删除）、R（重命名）
+      # --diff-filter=MR；2个筛选合并一起
       # # 将newadd.txt保存到 own_repo
       - name: 获取最新一次提交的新增文件
         run: |
           cd upstream
-          git diff --name-only --diff-filter=M HEAD~1 HEAD > newadd.txt
+          git diff --name-only --diff-filter=MR HEAD~1 HEAD > newadd.txt
           cat newadd.txt
           cp newadd.txt ../own_repo/newadd.txt
 
