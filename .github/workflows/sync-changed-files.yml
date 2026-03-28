@@ -15,6 +15,13 @@ jobs: # 创建环境
       contents: write  # 允许推送代码
 
     steps:
+      - name: 检出自己的仓库（存储状态和结果）
+        uses: actions/checkout@v4
+        with:
+          repository: cfv2ray/subCollection
+          token: ${{ secrets.HEXO_AUTO_DEPLOY }}
+          path: own_repo
+		  
       # 步骤1：检出上游仓库（默认会检出默认分支的最新提交）
       - name: Checkout upstream repository
         uses: actions/checkout@v4
@@ -30,3 +37,27 @@ jobs: # 创建环境
           cd upstream
           git diff --name-only --diff-filter=A HEAD~1 HEAD > newadd.txt
           cat newadd.txt
+          cp newadd.txt ../own_repo/newadd.txt #  将列表保存到 own_repo 中，作为 newadd.txt
+
+      - name: 提交并推送到自己的仓库
+        run: |
+          cd own_repo
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add .
+          git commit -m "https://github.com/free-nodes/v2rayfree $(date)" || echo "No changes to commit"
+          git push
+
+
+
+
+
+
+
+
+
+
+
+
+
+          
