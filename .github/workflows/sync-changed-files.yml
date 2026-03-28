@@ -1,0 +1,44 @@
+name: 同步上游仓库 # 监听上游仓库文件变动
+
+on:
+  # 你可以手动触发
+  workflow_dispatch:
+
+  # 也可以定时同步（每6小时）
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs: # 创建环境
+  sync-changed-files:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # 写的功能
+
+    steps:  # 取出仓库代码
+      - name: Checkout 拉取代码
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # 必须拉全历史才能 diff ；如果是2  # 拉取当前+上一次提交
+          persist-credentials: false
+
+      - name: 配置 Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: 添加并同步上游仓库
+        run: |
+          # 添加上游仓库地址
+          git remote add upstream https://github.com/free-nodes/v2rayfree.git
+          # 拉取上游最新代码
+          git fetch upstream
+          # 合并上游 main 分支（上游是 master 就改成 upstream/master）
+          git merge --allow-unrelated-histories upstream/main
+
+      #  提交并推送到你的仓库
+      - name: Commit and push changes
+        uses: EndBug/add-and-commit@v9
+        with:
+          message: "🔄 自动同步最新 https://github.com/free-nodes/v2rayfree"
+          committer_name: GitHub Actions
+          committer_email: actions@github.com
