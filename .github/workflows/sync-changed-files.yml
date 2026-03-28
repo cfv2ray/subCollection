@@ -37,7 +37,7 @@ jobs: # 创建环境
       - name: 获取最新一次提交的新增文件
         run: |
           cd upstream
-          git diff --name-only --diff-filter=A HEAD~1 HEAD > newadd.txt
+          git diff --name-only --diff-filter=M HEAD~1 HEAD > newadd.txt
           cat newadd.txt
           cp newadd.txt ../own_repo/newadd.txt
 
