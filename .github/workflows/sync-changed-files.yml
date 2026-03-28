@@ -29,4 +29,4 @@ jobs: # 创建环境
         run: |
           cd upstream
           git diff --name-only --diff-filter=A HEAD~1 HEAD > newadd.txt
-          cat newadd
+          cat newadd.txt
