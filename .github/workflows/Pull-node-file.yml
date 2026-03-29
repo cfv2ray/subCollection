@@ -41,13 +41,14 @@ jobs: # 创建环境
       # -o：只输出匹配到的部分，而不是输出整行。
       # 默认 grep 会输出包含匹配的整行，加上 -o 后仅显示匹配的文本本身。
       # head -1：只取第一行（如果有多行匹配）。
+      # LATEST_TAG=$(echo "$content" | grep -F "$PREFIX"  | head -1 | grep -o "https://[^ ]*")
       - name: 从README.md中提取目标链接
         id: extract_url
         run: |
           url='https://raw.githubusercontent.com/free-nodes/v2rayfree/main/README.md'
           PREFIX='https://raw.githubusercontent.com/free-nodes/v2rayfree/main/'
           content=$(curl -s --fail "$url") || { echo "Error: failed to download $url"; exit 1; }
-          LATEST_TAG=$(echo "$content" | grep -F "$PREFIX"  | head -1 | grep -o "https://[^ ]*")
+          LATEST_TAG=$(curl -s "$url" | grep -Eo $PREFIX&[^[:space:]]+ | head -1 | sed "s/['\"]//g")
           if [ -z "$LATEST_TAG" ]; then
             echo "未找到下载链接"
           else
