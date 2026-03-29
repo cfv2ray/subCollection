@@ -40,7 +40,7 @@ jobs: # 创建环境
       - name: 从README.md中提取目标链接
         id: extract_url
         run: |
-          url='https://raw.githubusercontent.com/free-nodes/v2rayfree/refs/heads/main/README.md'
+          url='https://raw.githubusercontent.com/free-nodes/v2rayfree/main/README.md'
           PREFIX='https://raw.githubusercontent.com/free-nodes/v2rayfree/main/'
           content=$(curl -s --fail "$url") || { echo "Error: failed to download $url"; exit 1; }
           LATEST_TAG=$(echo "$content" | grep -F "$PREFIX"  | head -1 | grep -o "https://[^ ]*")
