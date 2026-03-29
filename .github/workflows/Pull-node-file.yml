@@ -41,8 +41,9 @@ jobs: # 创建环境
         id: extract_url
         run: |
           url='https://raw.githubusercontent.com/free-nodes/v2rayfree/refs/heads/main/README.md'
+          PREFIX='https://raw.githubusercontent.com/free-nodes/v2rayfree/main/'
           content=$(curl -s --fail "$url") || { echo "Error: failed to download $url"; exit 1; }
-          LATEST_TAG=$(echo "$content" | grep -E '^https://raw\.githubusercontent\.com/free-nodes/v2rayfree/main/' | head -1)
+          LATEST_TAG=$(echo "$content" | -F "$PREFIX" README.md | head -1 | grep -o "https://[^ ]*")
           if [ -z "$LATEST_TAG" ]; then
             echo "Warning: No matching line found in README"
           else
