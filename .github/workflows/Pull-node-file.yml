@@ -41,7 +41,8 @@ jobs: # 创建环境
       # -o：只输出匹配到的部分，而不是输出整行。
       # 默认 grep 会输出包含匹配的整行，加上 -o 后仅显示匹配的文本本身。
       # head -1：只取第一行（如果有多行匹配）。
-      # sed 's/`$//' 删除行尾带的反引号`
+      # sed 's/$//'`：将行尾的反引号替换为空。
+      # LATEST_TAG=${LATEST_TAG%`}   # 注意反引号需要转义或特殊处理 也可以去掉`
       - name: 从README.md中提取目标链接
         id: extract_url
         run: |
@@ -54,8 +55,8 @@ jobs: # 创建环境
           else
             echo "下载链接: $LATEST_TAG"
           fi
-
-      - name: 下载目标文件
-        run: |
+          
           curl -s -L --fail "$LATEST_TAG" -o free-nodes || { echo "下载失败"; exit 1; }
           echo "下载完成，保存为 free-nodes"
+
+      
