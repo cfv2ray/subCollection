@@ -34,9 +34,13 @@ jobs: # 创建环境
           fi
           echo "README.md 下载成功"
 
-      # 定义需要匹配的前缀（可根据实际情况修改） 
-      # 从 README.md 中查找包含该前缀的行，并提取整行内容（假设整行就是 URL）
-      # 如果该行前缀后面还有其他内容，需要调整提取逻辑  
+      # 下载，失败则退出
+      # 提取以该前缀开头的第一行（整行）
+      # grep -o "https://[^ ]*" 
+      # 从输入中提取第一个以 https:// 开头，后面紧跟任意多个非空格字符的字符串，匹配以空格结尾；
+      # -o：只输出匹配到的部分，而不是输出整行。
+      # 默认 grep 会输出包含匹配的整行，加上 -o 后仅显示匹配的文本本身。
+      # head -1：只取第一行（如果有多行匹配）。
       - name: 从README.md中提取目标链接
         id: extract_url
         run: |
@@ -49,3 +53,12 @@ jobs: # 创建环境
           else
             echo "LATEST_TAG: $LATEST_TAG"
           fi
+
+      - name: 下载目标文件
+        run: |
+          curl -s -L $LATEST_TAG -o free-nodes
+          if [ ! -s free-nodes ]; then 
+            echo "README.md 下载失败或为空"
+            exit 1
+          fi
+          echo "README.md 下载成功"
