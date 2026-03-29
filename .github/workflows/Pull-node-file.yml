@@ -49,16 +49,12 @@ jobs: # 创建环境
           content=$(curl -s --fail "$url") || { echo "Error: failed to download $url"; exit 1; }
           LATEST_TAG=$(echo "$content" | grep -F "$PREFIX"  | head -1 | grep -o "https://[^ ]*")
           if [ -z "$LATEST_TAG" ]; then
-            echo "Warning: No matching line found in README"
+            echo "未找到下载链接"
           else
-            echo "LATEST_TAG: $LATEST_TAG"
+            echo "下载链接: $LATEST_TAG"
           fi
 
       - name: 下载目标文件
         run: |
-          curl -s -L $LATEST_TAG -o free-nodes
-          if [ ! -s free-nodes ]; then 
-            echo "README.md 下载失败或为空"
-            exit 1
-          fi
-          echo "README.md 下载成功"
+          curl -s -L --fail "$LATEST_TAG" -o free-nodes || { echo "下载失败"; exit 1; }
+          echo "下载完成，保存为 free-nodes"
