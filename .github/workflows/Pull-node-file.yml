@@ -46,7 +46,7 @@ jobs: # 创建环境
         id: extract_url
         run: |
           url='https://raw.githubusercontent.com/free-nodes/v2rayfree/main/README.md'
-          PREFIX='https://raw.githubusercontent.com/free-nodes/v2rayfree/main/[^[:space:]]+'
+          PREFIX='https://raw.githubusercontent.com/free-nodes/v2rayfree/main/'
           content=$(curl -s --fail "$url") || { echo "Error: failed to download $url"; exit 1; }
           LATEST_TAG=$(echo "$content" | grep -F "$PREFIX"  | head -1 | grep -o "https://[^ ]*" | sed 's/`$//')
           if [ -z "$LATEST_TAG" ]; then
