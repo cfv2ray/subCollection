@@ -45,6 +45,8 @@ jobs: # 创建环境
           cp newadd.txt ../own_repo/newadd.txt
           aaa=$(grep -F "https://raw.githubusercontent.com/free-nodes/v2rayfree/main/" README.md | sed 's#.*https://raw.githubusercontent.com/free-nodes/v2rayfree/main/##' | grep -o '^[^;]*' | sed 's/[[:space:]]*$//')
           echo "aaa=$aaa"
+          curl -H "Authorization: token ${{ secrets.HEXO_AUTO_DEPLOY }}" \
+          https://api.github.com/repos/free-nodes/v2rayfree/commits/HEAD
 
       # 提交并推送到自己的仓库
       - name: 提交并推送到自己的仓库
