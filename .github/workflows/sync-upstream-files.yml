@@ -38,7 +38,8 @@ jobs: # 创建环境
             --insecure \
             -o clashgithub \
             "$URL"
-
+      
+      # 从https://github.com/free-nodes/v2rayfree上下载节点文件
       - name: 从readme.md中找下载链接并下载文件
         run: |
           url='https://raw.githubusercontent.com/free-nodes/v2rayfree/main/README.md'
@@ -53,6 +54,22 @@ jobs: # 创建环境
           
           curl -s -L --fail "$LATEST_TAG" -o free-nodes || { echo "下载失败"; exit 1; }
           echo "下载完成，保存为 free-nodes"
+
+      # 从https://github.com/ggborr/FREEE-VPN上下载节点文件
+      - name: 从ggborr的readme.md中找下载链接并下载文件
+        run: |
+          url='https://raw.githubusercontent.com/ggborr/FREEE-VPN/main/README.md'
+          PREFIX='https://raw.githubusercontent.com/ggborr/FREEE-VPN'
+          content=$(curl -s --fail "$url") || { echo "Error: failed to download $url"; exit 1; }
+          LATEST_TAG=$(echo "$content" | grep -F "$PREFIX"  | head -1 | grep -o "https://[^ ]*" | sed 's/`$//')
+          if [ -z "$LATEST_TAG" ]; then
+            echo "未找到下载链接"
+          else
+            echo "下载链接: $LATEST_TAG"
+          fi
+          
+          curl -s -L --fail "$LATEST_TAG" -o ggborr || { echo "下载失败"; exit 1; }
+          echo "下载完成，保存为 ggborr"
             
       - name: 提交更改
         uses: stefanzweifel/git-auto-commit-action@v5
