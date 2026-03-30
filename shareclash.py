@@ -2,6 +2,9 @@
 
 # 导入网络请求库：用于发送HTTP请求下载文件
 import requests
+# 关闭 SSL 不安全警告,作用就是关闭烦人的 SSL 不安全请求警告
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 # 导入日期时间库：用于获取当前日期、计算昨天日期
 from datetime import datetime, timedelta
 # 导入YAML解析库：用于处理YAML格式的配置文件
@@ -28,9 +31,14 @@ url = f"https://node.freeclashnode.com/uploads/{year}/{month}/0-{day}.txt"
 # ---------------------- 1. 核心下载函数 ----------------------
 # 定义一个gets函数
 def gets():
+    # 模拟浏览器，解决 403
+    headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    }
+    
     try:
         # 发送GET请求下载文件（verify=False：关闭SSL证书验证，解决部分网站报错）
-        response = requests.get(url, verify=False)
+        response = requests.get(url, verify=False,timeout=10)
         # 判断请求是否成功（状态码200=成功）
         if response.status_code == 200:
             # 将下载的内容用GBK编码解码（适配中文文本）
