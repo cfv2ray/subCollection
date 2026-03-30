@@ -23,7 +23,7 @@ y_day = yesterday_date.strftime('%Y%m%d')
 
 # ---------------------- 1. 处理下载链接 ----------------------
 # 定义需要下载的文件URL（自动嵌入当天的年、月、日）
-url = f"https://clashgithub.github.io/uploads/{year}/{month}/0-{day}.txt"
+url = f"https://node.freeclashnode.com/uploads/{year}/{month}/0-{day}.txt"
 
 # ---------------------- 1. 核心下载函数 ----------------------
 # 定义一个gets函数
