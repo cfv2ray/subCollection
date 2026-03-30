@@ -39,11 +39,11 @@ def gets():
             with open("clashgithub", 'w', encoding='gbk') as file:
                 file.write(decoded_text)
             # 打印成功提示
-            print(f"Text content from {url} saved to clashgithub")
+            print(f"f"✅ 下载成功：{url}"")
         else:
-             print("连接URL出错:", url)  
-        except Exception as e:
-            print("下载文件出错：",e)
+             print("❌ 连接失败，状态码：{response.status_code}，URL：{url})  
+    except Exception as e:
+        print("❌ 下载出错：{str(e)}")
 
 # ---------------------- 1. 调用 gets 函数 ----------------------
 # 调用函数，执行下载任务
