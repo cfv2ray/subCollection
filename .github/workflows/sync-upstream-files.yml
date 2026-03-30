@@ -71,11 +71,10 @@ jobs: # 创建环境
           curl -s -L --fail "$LATEST_TAG" -o ggborr || { echo "下载失败"; exit 1; }
           echo "下载完成，保存为 ggborr"
             
-      - name: 提交更改
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          branch: main
-          commit_message: "🔄 $(date '+%Y-%m-%d %H:%M:%S')"
-          commit_author: 'github-actions[bot] <github-actions[bot]@users.noreply.github.com>'
-          # push_options: '--set-upstream'
-          push_options: --force
+      - name: Commit & Push
+        run: |
+          git config --global user.name "bot"
+          git config --global user.email "bot@github.com"
+          git add .
+          git commit -m "🔄 $(date +'%Y-%m-%d %H:%M:%S')"
+          git push
