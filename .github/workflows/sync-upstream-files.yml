@@ -20,8 +20,23 @@ jobs: # 创建环境
       - name: 检出自己仓库代码
         uses: actions/checkout@v4
 
-      - name: 安装依赖项
-        run: pip install requests
+      - name: 获取当前日期（年、月、日）
+        id: date
+        run: |
+          echo "year=$(date +%Y)" >> $GITHUB_OUTPUT
+          echo "month=$(date +%m)" >> $GITHUB_OUTPUT
+          echo "day=$(date +%Y%m%d)" >> $GITHUB_OUTPUT
+
+      - name: 下载文件（自动拼接日期）
+        run: |
+          URL="https://node.freeclashnode.com/uploads/${{ steps.date.outputs.year }}/${{ steps.date.outputs.month }}/0-${{ steps.date.outputs.day }}.txt"
+          echo "下载地址：$URL"
+          # 下载并保存为 clashgithub
+          curl -L \
+            -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
+            --insecure \
+            -o clashgithub \
+            "$URL"
 
       - name: 从readme.md中找下载链接并下载文件
         run: |
@@ -49,7 +64,7 @@ jobs: # 创建环境
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           branch: main
-          commit_message: "🔄 自动同步最新 https://github.com/free-nodes/v2rayfree"
+          commit_message: "🔄 ✔ $(date '+%Y-%m-%d %H:%M:%S"
           commit_author: 'github-actions[bot] <github-actions[bot]@users.noreply.github.com>'
           # push_options: '--set-upstream'
           push_options: --force
