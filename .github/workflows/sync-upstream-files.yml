@@ -8,7 +8,7 @@ on:
   # 分钟 小时 天 月  周
   # https://crontab.guru/
   schedule:
-    - cron: '0 13 * * *'
+    - cron: '0 15 * * *'
 
 jobs: # 创建环境
   sync-changed-files:
