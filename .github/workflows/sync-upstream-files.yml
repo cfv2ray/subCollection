@@ -34,7 +34,11 @@ jobs: # 创建环境
           
           curl -s -L --fail "$LATEST_TAG" -o free-nodes || { echo "下载失败"; exit 1; }
           echo "下载完成，保存为 free-nodes"
-
+      
+      - name: 运行shareclash.py下载文件
+        run: |
+          python shareclash.py
+            
       - name: 提交更改
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
