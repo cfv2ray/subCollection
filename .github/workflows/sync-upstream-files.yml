@@ -64,7 +64,7 @@ jobs: # 创建环境
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           branch: main
-          commit_message: "🔄 ✔ $(date '+%Y-%m-%d %H:%M:%S"
+          commit_message: "🔄 ✔ $(date '+%Y-%m-%d %H:%M:%S)"
           commit_author: 'github-actions[bot] <github-actions[bot]@users.noreply.github.com>'
           # push_options: '--set-upstream'
           push_options: --force
