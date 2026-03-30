@@ -33,9 +33,9 @@ url = f"https://node.freeclashnode.com/uploads/{year}/{month}/0-{day}.txt"
 def gets():
     # 模拟浏览器，解决 403
     headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
     }
-    
+
     try:
         # 发送GET请求下载文件（verify=False：关闭SSL证书验证，解决部分网站报错）
         response = requests.get(url, verify=False,timeout=10)
