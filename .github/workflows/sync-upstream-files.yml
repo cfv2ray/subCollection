@@ -26,7 +26,8 @@ jobs: # 创建环境
           echo "year=$(date +%Y)" >> $GITHUB_OUTPUT
           echo "month=$(date +%m)" >> $GITHUB_OUTPUT
           echo "day=$(date +%Y%m%d)" >> $GITHUB_OUTPUT
-
+      
+      # 下载https://shareclash.github.io上面的节点文件
       - name: 下载文件（自动拼接日期）
         run: |
           URL="https://node.freeclashnode.com/uploads/${{ steps.date.outputs.year }}/${{ steps.date.outputs.month }}/0-${{ steps.date.outputs.day }}.txt"
