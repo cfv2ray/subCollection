@@ -39,9 +39,9 @@ def gets():
             with open("clashgithub", 'w', encoding='gbk') as file:
                 file.write(decoded_text)
             # 打印成功提示
-            print(f"f"✅ 下载成功：{url}"")
+            print(f"✅ 下载成功：{url}")
         else:
-             print("❌ 连接失败，状态码：{response.status_code}，URL：{url})  
+             print(f"❌ 连接失败，状态码：{response.status_code}，URL：{url})  
     except Exception as e:
         print("❌ 下载出错：{str(e)}")
 
