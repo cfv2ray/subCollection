@@ -39,7 +39,7 @@ jobs: # 创建环境
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           branch: main
-          commit_message: "🔄 $(date)" 
+          commit_message: "🔄 自动同步最新 https://github.com/free-nodes/v2rayfree"
           commit_author: 'github-actions[bot] <github-actions[bot]@users.noreply.github.com>'
           # push_options: '--set-upstream'
           push_options: --force
