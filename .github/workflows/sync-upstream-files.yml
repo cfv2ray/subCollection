@@ -20,6 +20,9 @@ jobs: # 创建环境
       - name: 检出自己仓库代码
         uses: actions/checkout@v4
 
+      - name: 安装依赖项
+        run: pip install requests
+
       - name: 从readme.md中找下载链接并下载文件
         run: |
           url='https://raw.githubusercontent.com/free-nodes/v2rayfree/main/README.md'
