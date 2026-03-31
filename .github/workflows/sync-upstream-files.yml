@@ -20,7 +20,8 @@ jobs: # 创建环境
       - name: 检出自己仓库代码
         uses: actions/checkout@v4
 
-
+      - name: 设置时区
+        run: sudo timedatectl set-timezone 'Asia/Shanghai'
 
 
       - name: 获取当前日期（年、月、日）
