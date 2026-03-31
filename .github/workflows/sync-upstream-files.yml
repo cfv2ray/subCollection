@@ -20,6 +20,10 @@ jobs: # 创建环境
       - name: 检出自己仓库代码
         uses: actions/checkout@v4
 
+      - name: 设置时区
+        run: sudo timedatectl set-timezone 'Asia/Shanghai'
+
+
       - name: 获取当前日期（年、月、日）
         id: date
         run: |
@@ -71,10 +75,15 @@ jobs: # 创建环境
           curl -s -L --fail "$LATEST_TAG" -o ggborr || { echo "下载失败"; exit 1; }
           echo "下载完成，保存为 ggborr"
             
-      - name: Commit & Push
-        run: |
-          git config --global user.name "bot"
-          git config --global user.email "bot@github.com"
-          git add .
-          git commit -m "🔄 $(date +'%Y-%m-%d %H:%M:%S')"
-          git push
+      - name: 提交更改
+        run: |                 
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git pull origin master
+          git add .                 # list*
+          #git add snippets/
+          git commit -m "$(date '+%Y-%m-%d %H:%M:%S') "
+      - name: 推送更改
+        uses: ad-m/github-push-action@master
+        with:
+          branch: master
