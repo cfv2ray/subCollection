@@ -75,15 +75,10 @@ jobs: # 创建环境
           curl -s -L --fail "$LATEST_TAG" -o ggborr || { echo "下载失败"; exit 1; }
           echo "下载完成，保存为 ggborr"
             
-      - name: 提交更改
-        run: |                 
-          git config --local user.email "actions@github.com"
-          git config --local user.name "GitHub Actions"
-          git pull origin main
-          git add .                 # list*
-          #git add snippets/
-          git commit -m "$(date '+%Y-%m-%d %H:%M:%S') "
-      - name: 推送更改
-        uses: ad-m/github-push-action@master
-        with:
-          branch: main
+      - name: Commit & Push
+        run: |
+          git config --global user.name "bot"
+          git config --global user.email "bot@github.com"
+          git add .
+          git commit -m "🔄 $(date +'%Y-%m-%d %H:%M:%S')"
+          git push
