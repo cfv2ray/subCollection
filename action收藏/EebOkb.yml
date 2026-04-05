@@ -1,0 +1,149 @@
+# 收集下面的网址
+# https://github.com/abshare/abshare.github.io
+name: Fetch Clash Subscription
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  watch:
+    types: [started]
+
+jobs:
+  fetch-clash-subscription:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: |
+          npm install axios tough-cookie axios-cookiejar-support
+
+      - name: Fetch and extract subscription link
+        id: extract-link
+        run: |
+          echo "Fetching README.md..."
+          wget -O README.md https://raw.githubusercontent.com/abshare/abshare.github.io/refs/heads/main/README.md || {
+            echo "Failed to download README.md"
+            exit 1
+          }
+          
+          echo "Extracting subscription link..."
+          LINK=$(grep -A 5 ">🚀免费Clash订阅链接" README.md | grep -Eo 'https://[^ ]+' | head -n 1 | sed 's|https:///|https://|g')
+
+          if [ -z "$LINK" ]; then
+            echo "Failed to find the subscription link."
+            exit 1
+          fi
+
+          echo "Found valid link: $LINK"
+          echo "LINK=$LINK" >> $GITHUB_ENV
+
+      - name: Download subscription with advanced bypass
+        run: |
+          node -e "
+          const axios = require('axios');
+          const { CookieJar } = require('tough-cookie');
+          const { wrapper } = require('axios-cookiejar-support');
+          const fs = require('fs');
+          const url = process.env.LINK;
+          
+          // 创建带Cookie支持的axios实例（Cloudflare需要Cookie验证）
+          const cookieJar = new CookieJar();
+          const axiosInstance = wrapper(axios.create({
+            jar: cookieJar,
+            withCredentials: true,
+            timeout: 30000
+          }));
+
+          // 更贴近真实浏览器的请求头
+          const headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+            'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Referer': 'https://github.com/',
+            'Connection': 'keep-alive',
+            'Upgrade-Insecure-Requests': '1',
+            'Sec-Fetch-Dest': 'document',
+            'Sec-Fetch-Mode': 'navigate',
+            'Sec-Fetch-Site': 'cross-site',
+            'Sec-Fetch-User': '?1',
+            'Cache-Control': 'max-age=0',
+            'DNT': '1' // 增加Do Not Track头，模拟隐私保护浏览器
+          };
+
+          // 先发送一个预检请求获取必要的Cookie
+          axiosInstance.get(new URL(url).origin, { headers })
+            .then(response => {
+              console.log('Preflight request successful, status:', response.status);
+              // 等待1-2秒，模拟人类浏览延迟
+              return new Promise(resolve => setTimeout(resolve, 1500));
+            })
+            .then(() => {
+              // 发送实际请求
+              return axiosInstance.get(url, { headers });
+            })
+            .then(response => {
+              console.log('Download successful, status:', response.status);
+              
+              let content = response.data;
+              
+              // 检查是否是Base64编码
+              try {
+                if (content.trim().length % 4 === 0 && /^[A-Za-z0-9+/=]+$/.test(content.trim())) {
+                  content = Buffer.from(content.trim(), 'base64').toString('utf8');
+                  console.log('Base64 decoded successfully');
+                }
+              } catch (e) {
+                console.log('Not Base64 content, using original');
+              }
+              
+              fs.writeFileSync('clash_subscription.txt', content);
+              console.log('Content saved successfully');
+            })
+            .catch(error => {
+              console.error('Download failed:', error.message);
+              
+              if (error.response) {
+                console.error('Response status:', error.response.status);
+                
+                // 保存响应内容用于分析
+                fs.writeFileSync('error_response.html', error.response.data);
+                
+                // 特别处理Cloudflare的挑战页面
+                if (error.response.data.includes('Cloudflare')) {
+                  console.error('Cloudflare protection detected. Consider using a proxy.');
+                }
+              }
+              
+              process.exit(1);
+            });
+          "
+        env:
+          LINK: ${{ env.LINK }}
+
+      - name: Check for changes
+        id: check-changes
+        run: |
+          if git diff --quiet clash_subscription.txt; then
+            echo "No changes to subscription"
+            echo "CHANGED=false" >> $GITHUB_ENV
+          else
+            echo "Subscription has changed"
+            echo "CHANGED=true" >> $GITHUB_ENV
+          fi
+
+      - name: Commit and push changes
+        if: env.CHANGED == 'true'
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add clash_subscription.txt
+          git commit -m "Update clash subscription at $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+          git push "https://${{ secrets.MY_PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }}.git" HEAD:main
